@@ -3,6 +3,7 @@ import os
 from openai import OpenAI
 from dotenv import load_dotenv
 import re
+import json
 
 load_dotenv()
 
@@ -16,6 +17,9 @@ client = OpenAI(
 def finding_product_details(client,user_input):
     prompt = f"""
 You are a cybersecurity expert specializing in CVE analysis.Provide verified, concise, and accurate vulnerability information based on your knowledge. If unsure, explicitly state: "This information may not be up-to-date."
+for details you may refer all these websites:
+    first in OEM websites, https://www.cvedetails.com/
+
 
 Details for CVE-ID: {user_input}
 
@@ -46,7 +50,8 @@ Start your response now:
 
 def find_cve_details(cve_id):
     prompt = f"""
-You are a cybersecurity expert. Analyze the following CVE-ID. Use the format below to present the data with the accuracy:
+"Provide detailed information about {cve_id}, including its impact, technical details, affected systems or versions, severity (CVSS score), potential exploits, available patches or mitigation steps, and references to any official advisories, databases, or resources."
+    first in OEM websites, https://www.cvedetails.com/
 
     Response:
     Device Name: <device_name>
@@ -74,37 +79,13 @@ You are a cybersecurity expert. Analyze the following CVE-ID. Use the format bel
     return response_text
 
 def find_oem_website(user_input):
-    prompt = f"""
-   You are a cybersecurity expert specializing in CVE analysis.Provide verified, concise, and accurate vulnerability information based on your knowledge. It should be accurate"
-
-Details for CVE-ID: {user_input}
-
-Response Format:
-- CVE-ID: <cve_id>
-- Device Name: <device_name>
-- Description: <description>
-- Severity Level: <severity>
-- Mitigation Strategy: <mitigation>
-- Link: <link>
-
-Start your response now:
-    """
-    completion = client.chat.completions.create(
-        model="nvidia/llama-3.1-nemotron-70b-instruct",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.5,
-        top_p=1,
-        max_tokens=1024,
-        stream = True
-    )
-    response_text = ""  # Initialize an empty string to collect the response
-    for chunk in completion:
-        if chunk.choices[0].delta.content is not None:
-            response_text += chunk.choices[0].delta.content  # Append each chunk to the response text
-    return response_text
-    # urls = re.findall(r'https?://[^\s]+',response_text)
-    # if urls:
-    #     return "\n".join(urls)
+    with open(r"OEm_venddors.json", "r", encoding="utf-8") as file:
+        oem_data = json.load(file)
+    words = user_input.lower().split()
+    for word in words:
+        for entry in oem_data:
+            if word == entry["product"].lower():
+                return f"OEM website for the given product: {entry['product']} \n link: {entry['oemwebsite']} \n Using the  provided link search for the product vulnerability details."
 
 
 def find_tools(user_input):
@@ -133,8 +114,12 @@ def ignore_query(user_input):
     prompt = f"""
     You are a cybersecurity assistant. 
     answer the queries related to cybersecurity.
-    Respond politely to greeting queries and refuse queries unrelated to cybersecurity.
     If it is related to the cybersecurity then give the information in a very short manner like 200 words maximum
+    remember the previous query user might ask something about that.  
+    Respond politely to greeting queries and refuse queries unrelated to cybersecurity.
+    for details you may refer all these websites:
+    first in OEM websites, https://www.cvedetails.com/
+
     Input: {user_input}
     Response:
     """
@@ -156,11 +141,11 @@ def ignore_query(user_input):
 def classified_data(user_input):
     pattern = r"cve-\d{4}-\d{4,}"
     matches = re.findall(pattern, user_input.lower())
-    if matches:
-        for match in matches:
-            return find_cve_details(match)
-    elif "oem " in user_input.lower():
+    if "oem " in user_input.lower():
         return find_oem_website(user_input)
+    elif matches:
+        for match in matches:
+            return find_cve_details(user_input)
     elif "tool" in user_input.lower() or "tools" in user_input.lower():
         return find_tools(user_input)
     elif "product" in user_input.lower() or "device" in user_input.lower():
