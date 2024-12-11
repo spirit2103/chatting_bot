@@ -18,7 +18,7 @@ def finding_product_details(client,user_input):
     prompt = f"""
 You are a cybersecurity expert specializing in CVE analysis.Provide verified, concise, and accurate vulnerability information based on your knowledge. If unsure, explicitly state: "This information may not be up-to-date."
 for details you may refer all these websites:
-    first in OEM websites, https://www.cvedetails.com/
+    first search in OEM websites if details is not find then use this link https://www.cvedetails.com/
 
 
 Details for CVE-ID: {user_input}
@@ -51,7 +51,7 @@ Start your response now:
 def find_cve_details(cve_id):
     prompt = f"""
 "Provide detailed information about {cve_id}, including its impact, technical details, affected systems or versions, severity (CVSS score), potential exploits, available patches or mitigation steps, and references to any official advisories, databases, or resources."
-    first in OEM websites, https://www.cvedetails.com/
+    first search in OEM websites if details is not find then use this link https://www.cvedetails.com/
 
     Response:
     Device Name: <device_name>
@@ -85,7 +85,7 @@ def find_oem_website(user_input):
     for word in words:
         for entry in oem_data:
             if word == entry["product"].lower():
-                return f"OEM website for the given product: {entry['product']} \n link: {entry['oemwebsite']} \n Using the  provided link search for the product vulnerability details."
+                return f"OEM website for the given product: {entry['product']} \n\n link: {entry['oemwebsite']} \n\n Using the  provided link search for the product vulnerability details."
 
 
 def find_tools(user_input):
@@ -93,7 +93,7 @@ def find_tools(user_input):
     You are a cybersecurity assistant.Provide a 200-word description of the given cybersecurity tool.
     Tool Name: {user_input}
     Response:
-    <tool_description>
+   
     """
     completion = client.chat.completions.create(
         model="nvidia/llama-3.1-nemotron-70b-instruct",
@@ -117,8 +117,6 @@ def ignore_query(user_input):
     If it is related to the cybersecurity then give the information in a very short manner like 200 words maximum
     remember the previous query user might ask something about that.  
     Respond politely to greeting queries and refuse queries unrelated to cybersecurity.
-    for details you may refer all these websites:
-    first in OEM websites, https://www.cvedetails.com/
 
     Input: {user_input}
     Response:

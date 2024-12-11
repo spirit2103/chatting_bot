@@ -82,5 +82,37 @@
     {
         "product":"nvidia",
         "oemwebsite":"https://www.nvidia.com/en-us/product-security/"
+    },
+    {
+        "product":"adobe",
+        "oemwebsite":"https://helpx.adobe.com/security.html"
+    },
+    {
+        "product":"nokia",
+        "oemwebsite":"https://www.nokia.com/about-us/security-and-privacy/product-security-advisory/"
+    },
+    {
+        "product":"red hat",
+        "oemwebsite":"https://access.redhat.com/security/security-updates/security-advisories"
+    },
+    {
+        "product":"atlassian",
+        "oemwebsite":"https://www.atlassian.com/trust/security/advisories"
+    },
+    {
+        "product":"salesforce",
+        "oemwebsite":"https://security.salesforce.com/security-advisories"
+    },
+    {
+        "product":"fortinet",
+        "oemwebsite":"https://fortiguard.fortinet.com/psirt"
+    },
+    {
+        "product":"hpe",
+        "oemwebsite":"https://support.hpe.com/connect/s/securitybulletinlibrary?language=en_US#sort=%40hpescuniversaldate%20descending&layout=table&numberOfResults=25&f:@kmdoclanguagecode=[cv1871440]&hpe=1"
+    },
+    {
+        "product":"splunk",
+        "oemwebsite":"https://advisory.splunk.com/?301=/en_us/product-security.html"
     }
 ]
