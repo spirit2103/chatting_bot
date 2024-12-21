@@ -152,9 +152,9 @@ def classified_data(user_input):
         return ignore_query(user_input)
 
 # Streamlit UI
-st.set_page_config(page_title="Cybersecurity Assistant", layout="centered")
+st.set_page_config(page_title="Cyber Assistant", layout="centered")
 
-st.title("🤖 Cybersecurity Assistant")
+st.title("🤖 Cyber Assistant")
 st.markdown("Ask questions about **vulnerabilities**, **CVE-IDs**, **OEM websites**, or **cybersecurity tools**.")
 
 # Chat container
